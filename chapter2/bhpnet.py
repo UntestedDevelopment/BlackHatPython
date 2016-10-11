@@ -1,6 +1,6 @@
 import getopt
 import socket
-importsubprocess
+import subprocess
 import sys
 import threading
 
@@ -46,7 +46,7 @@ def main():
 
     # read the parameters
     try:
-        opts, args = getopt(sys.argv[1:], "hle:t:p:cu:", ["help", "listen", "execute", "target", "port", "command", "upload"])
+        opts, args = getopt.getopt(sys.argv[1:], "hle:t:p:cu:", ["help", "listen", "execute", "target", "port", "command", "upload"])
     except getopt.GetoptError as err:
         print str(err)
         usage()
@@ -65,7 +65,7 @@ def main():
             elif o in ("-t", "--target"):
                 target = a
             elif o in ("-p", "--port"):
-                port = a
+                port = int(a)
             else:
                 assert False, "Unhandled Option"
 
@@ -130,6 +130,7 @@ def server_loop():
     if not len(target):
         target = "0.0.0.0"
 
+    print "%s:%s" % (target, port)
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server.bind((target, port))
 
@@ -200,7 +201,7 @@ def client_handler(client_socket):
 
             response = run_command(cmd_buffer)
             client_socket.send(response)
-            
+
 
 
 
